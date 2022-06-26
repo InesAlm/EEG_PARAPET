@@ -89,6 +89,7 @@ for pp = 1:nFiles  % will be able to run through multiple participants e.g. 1:90
 end
 
 %% delete useless files from DATASETS
+
 % Get list of files
 filesEEGPRE = dir(DATASETS);
 
@@ -120,6 +121,7 @@ for pp = 1:nFilesPRE
 end
 
 %% delete useless files from ICA
+
 % Get list of files
 filesEEGICA = dir(ICA);
 
