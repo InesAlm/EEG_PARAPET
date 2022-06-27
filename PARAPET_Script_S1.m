@@ -31,10 +31,10 @@ for pp = 1:nFiles  % will be able to run through multiple participants e.g. 1:90
     ero = 'load error';   %set as different things throughout so we can see where the script stopped at for that pps to figure out what's going wrong      
     EEG = pop_loadeep_v4(sprintf(strcat(FOLDER,'/%s'),  filesEEG(pp).name));
 
-    %cuts data before/after first/last relevant event
+    %cuts data before_after first_last relevant event
     Eventt = {EEG.event(:).type}; 
     ero = 'cut error';
-    eventIndexes = [find(strcmp(Eventt, '20')), find(strcmp(Eventt, '30')), find(strcmp(Eventt, '35')), find(strcmp(Eventt, '40')), find(strcmp(Eventt, '50')), find(strcmp(Eventt, '60')), find(strcmp(Eventt, '70'))];
+    eventIndexes = [find(strcmp(Eventt, '0020')), find(strcmp(Eventt, '0030')), find(strcmp(Eventt, '0035')), find(strcmp(Eventt, '0040')), find(strcmp(Eventt, '0050')), find(strcmp(Eventt, '0060')), find(strcmp(Eventt, '0070'))];
     eventIndexes = sort(eventIndexes); %usually in order anyway
     TimeOfFirstEvent = (((EEG.event(min(eventIndexes(:))).latency)/1000))-60;  
     TimeOfLastEvent = (((EEG.event(max(eventIndexes(:))).latency)/1000))+60;
@@ -78,7 +78,7 @@ for pp = 1:nFiles  % will be able to run through multiple participants e.g. 1:90
 %    end
 
     %removed channel interpolation
-    EEG = pop_interp(EEG, originalEEG.chanlocs, 'spherical');
+    EEG = pop_interp(EEG, EEG.chanlocs, 'spherical');
     EEG = eeg_checkset( EEG );
 
     EEG = pop_saveset(EEG, sprintf('PAPAPET_%d_S1_PREPROC',pp), DATASETS);
@@ -88,7 +88,6 @@ for pp = 1:nFiles  % will be able to run through multiple participants e.g. 1:90
     end
 end
 
-%% delete useless files from DATASETS
 
 % Get list of files
 filesEEGPRE = dir(DATASETS);
@@ -103,7 +102,7 @@ nFilesPRE = length(filesEEGPRE);
 for pp = 1:nFilesPRE
     try
     ero = 'load error';   %set as different things throughout so we can see where the script stopped at for that pps to figure out what's going wrong      
-    EEG = pop_loadeep_v4(sprintf(strcat(DATASETS,'/%s'),  filesEEGPRE(pp).name));
+    EEG = pop_loadset(sprintf(strcat(DATASETS,'/%s'),  filesEEGPRE(pp).name));
 
     EEG = pop_runica(EEG, 'icatype', 'runica', 'extended',1,'interrupt','on');
     EEG = eeg_checkset(EEG);
@@ -120,7 +119,6 @@ for pp = 1:nFilesPRE
     end
 end
 
-%% delete useless files from ICA
 
 % Get list of files
 filesEEGICA = dir(ICA);
@@ -134,16 +132,16 @@ nFilesICA = length(filesEEGICA);
 for pp = 1:nFilesICA
     try
     ero = 'load error';   %set as different things throughout so we can see where the script stopped at for that pps to figure out what's going wrong      
-    EEG = pop_loadeep_v4(sprintf(strcat(ICA,'/%s'),  filesEEGICA(pp).name));
+    EEG = pop_loadset(sprintf(strcat(ICA,'/%s'),  filesEEGICA(pp).name));
 
     %epoch segmentation
     % event list for ERPlab
-    EEG = pop_overwritevent( EEG, 'code');
-    EEG = pop_importeegeventlist(EEG, EVENTLIST , 'ReplaceEventList', 'on'); % GUI: 20-Jun-2022 10:00:47
+    EEG = pop_overwritevent(EEG, 'code');
+    EEG = pop_importeegeventlist(EEG, EVENTLIST , 'ReplaceEventList', 'on');
     EEG = eeg_checkset(EEG);
 
     %bins  
-    EEG  = pop_binlister(EEG , 'BDF', BINDESC, 'ExportEL', sprintf('C:\Users\inesa\OneDrive\Desktop\EEG_DATA\PARAPET_process\PARAPET_%d_S1_EventList.txt', pp), 'ImportEL', sprintf('C:\Users\inesa\OneDrive\Desktop\EEG_DATA\PARAPET_process\PARAPET_%d_S1_EventList.txt', pp), 'IndexEL',  1, 'SendEL2', 'EEG&Text', 'Voutput', 'EEG'); % GUI: 20-Jun-2022 10:03:36
+    EEG  = pop_binlister(EEG , 'BDF', BINDESC, 'ExportEL', 'C:\Users\inesa\OneDrive\Desktop\EEG_DATA\PARAPET_EVENTLISTS\EventList.txt', 'ImportEL', EVENTLIST, 'IndexEL',  1, 'SendEL2', 'EEG&Text', 'Voutput', 'EEG');
     EEG = eeg_checkset(EEG);
 
     % epoch
