@@ -7,12 +7,12 @@ ERPDATASETS = 'C:/Users/inesa/OneDrive/Desktop/EEG_DATA/PARAPET_1/PARAPET_ERP';
 CNT = 'cnt';
 SET = 'set';
 ERP = 'erp';
-SESSION = 'S1'; %change according to script
+SESSION = 'S1'; %change according to session number
 LOWCUT = 0.5;
 HIGHCUT = 50;
 SAMPLER = 512;
 EPOCHBEF = -200.0;
-EPOCHAFT = 1000.0; %maybe 2000 if needed
+EPOCHAFT = 1000.0;
 BINDESC = 'C:\Users\inesa\OneDrive\Desktop\EEG_DATA\PARAPET_process\bindescrip.txt';
 ERPLOW = 30;
 ERPBIN = 'bin3 = bin2 - bin1 label CS+ CS- difference';
@@ -119,7 +119,7 @@ nFilesPRE = length(filesEEGPRE);
 
 % ICA
  % change number according to dataset to be processed (even numbers, .set)
-for pp = 14
+for pp = 2
     try
     ero = 'load error';   %set as different things throughout so we can see where the script stopped at for that pps to figure out what's going wrong      
     %loads sets that are .set files and from appropriate session
@@ -240,6 +240,7 @@ nFilesERP = length(filesEEGERP);
 for pp = 1:nFilesERP
     ERP = pop_loaderp('filename',filesEEGERP(pp).name,'filepath',ERPDATASETS,'overwrite','off','Warning','on');
 
+    %save ERP files as .txt files
     OLDNAME.ERP = filesEEGERP(pp).name;
     NEWNAME.FINAL = strrep(filesEEGERP(pp).name,'.erp','');
     ALLERP = pop_geterpvalues(ERP, [LAT1 LAT2], [1 2],  1:64 , 'Baseline', 'pre', 'FileFormat', 'wide', 'Filename',...
@@ -256,11 +257,9 @@ notes.notes(1,1) = cellstr('ppNum');
 notes.notes(1,2) = cellstr('Channels Rejected');
 notes.notes(1,3)= cellstr('Epoch removed'); 
 notes.notes(1,4) = cellstr('Percent removed');
-notes.notes(1,5) = cellstr('Amount of event markers');
 
 notes.notes(pp+1,1) = cellstr(filesEEG(pp).name(1:n));
 notes.notes(pp+1,2) = cellstr(length(channelsAfterRemove));
 notes.notes(pp+1,3) = num2cell(trialsBefore - trialsAfter);
 notes.notes(pp+1,4) = num2cell(epochreject);
-notes.notes(pp+1,5) = num2cell(length(eventIndexes));
 
