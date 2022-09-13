@@ -1,4 +1,3 @@
-%DELETE .EVT FILES FROM PARAPET FOLDER
 %define variables
 FOLDER = 'C:/Users/inesa/OneDrive/Desktop/EEG_DATA/PARAPET_1/PARAPET_S1';
 DATASETS = 'C:/Users/inesa/OneDrive/Desktop/EEG_DATA/PARAPET_1/PARAPET_DATASETS';
